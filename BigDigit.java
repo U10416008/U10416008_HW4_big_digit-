@@ -8,7 +8,8 @@ public class BigDigit {
 
     public static void main(String[] args) {
         int nextLocation = 0;
-		int lastLocation = 0;
+        int lastLocation = 0;
+        
         int j = 0;
         String digitChange;
         String numberChange;
@@ -20,7 +21,7 @@ public class BigDigit {
             digit1 = digit2;
             digit2 = numberChange;
         }
-		int compare = 0;
+        int compare = 0;
         
         if(digit1.length() == digit2.length()){
             if(digit1.length()>1){
@@ -41,12 +42,15 @@ public class BigDigit {
                 }
             }
         }
+        
+        int length = digit1.length() + digit2.length();
+        int[] addLocation = new int[length];
         String[] number1 = digit1.split("");
         String[] number2 = digit2.split("");
-        int length = digit1.length();
         ArrayList<String> sum = new ArrayList<>() ;
-		ArrayList<String> minus = new ArrayList<>() ;
-        //change digits of number1  
+        ArrayList<String> minus = new ArrayList<>() ;
+        ArrayList<String> multi = new ArrayList<>() ;
+        //change digits of number1
         for(int i = 0 ; i < digit1.length()/2;i++){
             digitChange = number1[i];
             number1[i] = number1[digit1.length()-1-i] ;
@@ -57,7 +61,8 @@ public class BigDigit {
             System.out.print(number1[i]);
         }
         System.out.println();
-		//change digits of number2  
+		//change digits of number2
+		
         for(int i = 0 ; i < digit2.length()/2;i++){
             digitChange = number2[i];
             number2[i] = number2[digit2.length()-1-i] ;
@@ -68,7 +73,7 @@ public class BigDigit {
             System.out.print(number2[i]);
         }
         System.out.println();
-        //add every digits 
+		//add every digits
         for(int i = 0 ; i < digit2.length();i++){
             sum.add(Integer.toString(addDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]),nextLocation)));
             nextLocation = nextLocation(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]),nextLocation);
@@ -78,20 +83,17 @@ public class BigDigit {
                 sum.add(Integer.toString(addDigit(Integer.parseInt(number1[i]),nextLocation)));
                 nextLocation = nextLocation(Integer.parseInt(number1[i]),nextLocation);
             }
-           
-        }
-		
-		if(nextLocation == 1){
+        }     
+        
+        if(nextLocation == 1){
             sum.add("1");
         }
-		
-		//print the sum 
-		
-		System.out.print("The ADD result is ");
+		//print the sum
+        System.out.print("The ADD result is ");
         for(int i = sum.size()-1 ; i>=0 ;i--){
             System.out.print(sum.get(i));
         }
-		System.out.println();
+        System.out.println();
 		//minus every digits
         for(int i = 0 ; i < digit2.length();i++){
             minus.add(Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]))));
@@ -123,13 +125,34 @@ public class BigDigit {
         }
 		//print the minus
         System.out.print("The MINUS result is ");
+       
         for(int i = minus.size()-1 ; i>=0 ;i--){
             System.out.print(minus.get(i));
         }
         
-        
+        System.out.println();
+		// cross every number and add
+        for(int i = 0 ; i < digit2.length(); i++){
+            for(int k = 0 ; k < digit1.length();k++){
+                    addLocation[k + i +1] =  addLocation[k + i +1] +  afterLocation(Integer.parseInt(number1[k]), Integer.parseInt(number2[i]),addLocation[k + i]);
+                    addLocation[k + i] = multiDigit(Integer.parseInt(number1[k]), Integer.parseInt(number2[i]),addLocation[k + i]);                         
+            }
+        }
+        for(int i = 0 ; i < digit1.length() + digit2.length() ;i++){
+            multi.add(Integer.toString(addLocation[ i ]));
+        }
+        checkFirst0 = multi.size()-1;
+        while(Integer.parseInt(multi.get(checkFirst0)) == 0 && checkFirst0 > 0){
+            multi.remove(checkFirst0);
+            checkFirst0--;
+        }
+		//print the multi 
+        System.out.print("The MULTI result is ");
+        for(int i = multi.size()-1 ; i>=0 ;i--){
+            System.out.print(multi.get(i));
+        }
     }
-	//check number1 + number2 + nextLocation is >=10 or not 
+	//check number1 + number2 + nextLocation is >=10 or not
     public static int nextLocation(int number1,int number2,int nextLocation){
         if(number1+ number2+nextLocation >=10){
             return 1;
@@ -137,7 +160,7 @@ public class BigDigit {
             return 0;
         }
     }
-	//check number1 + nextLocation is >=10 or not 
+	//check number1 + number2 + nextLocation is >=10 or not
     public static int nextLocation(int number1,int nextLocation){
         if(number1 + nextLocation >=10){
             return 1;
@@ -145,7 +168,7 @@ public class BigDigit {
             return 0;
         }
     }
-	// return the first digit 
+	// return the first digit
     public static int addDigit(int number1,int number2,int nextLocation){
         if(number1 + number2 + nextLocation >=10) {
             return (number1 + number2 + nextLocation)%10;
@@ -154,7 +177,7 @@ public class BigDigit {
         }
             
     }
-	// return the first digit 
+	// return the first digit
     public static int addDigit(int number1,int nextLocation){
         if(number1 +  nextLocation >=10) {
             return (number1  + nextLocation)%10;
@@ -162,13 +185,15 @@ public class BigDigit {
             return number1  + nextLocation;
         }
     }
-	    public static int lastLocation(int number1,int number2){
+	//check number1 is  < number2   or not
+    public static int lastLocation(int number1,int number2){
         if(number1 < number2){
             return 1;
         }else{
             return 0;
         }
     }
+	//check number1 is  < 0   or not
     public static int lastLocation(int number1){
         if(number1 < 0){
             return 1;
@@ -176,6 +201,7 @@ public class BigDigit {
             return 0;
         }
     }
+	// return the digit
     public static int minusDigit(int number1,int number2){
         if(number1  < number2) {
             return 10 + number1 - number2 ;
@@ -184,6 +210,7 @@ public class BigDigit {
         }
             
     }
+	// return the digit
     public static int minusDigit(int number1){
         if(number1  <0 ) {
             return 10 + number1 ;
@@ -191,4 +218,15 @@ public class BigDigit {
             return number1 ;
         }
     }
+	//return the next digit
+    public static int afterLocation(int number1 , int number2 ,int afterLocation){
+        
+        return (number1 * number2 + afterLocation )/10;
+        
+    }
+	//return the first digit
+    public static int multiDigit(int number1 , int number2 , int afterLocation){
+        return (number1 * number2 + afterLocation)%10;
+    }
 }
+
