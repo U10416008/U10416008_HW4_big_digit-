@@ -23,11 +23,22 @@ public class BigDigit {
 		int compare = 0;
         
         if(digit1.length() == digit2.length()){
-            while(Integer.parseInt(digit1.substring(compare,compare+1)) <= Integer.parseInt(digit2.substring(compare,compare+1))&& compare < digit1.length()-1){
-                numberChange = digit1;
-                digit1 = digit2;
-                digit2 = numberChange;
-                compare++;
+            if(digit1.length()>1){
+                while(Integer.parseInt(digit1.substring(compare,compare+1)) == Integer.parseInt(digit2.substring(compare,compare+1)) && compare < digit1.length()-1){
+                    
+                    compare++;
+                }
+                if(Integer.parseInt(digit1.substring(compare,compare+1)) < Integer.parseInt(digit2.substring(compare,compare+1))){
+                    numberChange = digit1;
+                    digit1 = digit2;
+                    digit2 = numberChange;
+                }
+            }else{
+                if(Integer.parseInt(digit1) < Integer.parseInt(digit2)){
+                    numberChange = digit1;
+                    digit1 = digit2;
+                    digit2 = numberChange;
+                }
             }
         }
         String[] number1 = digit1.split("");
