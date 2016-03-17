@@ -20,10 +20,15 @@ public class BigDigit {
             digit1 = digit2;
             digit2 = numberChange;
         }
-		if(digit1.length() == digit2.length() && Integer.parseInt(digit1.substring(0,1))<Integer.parseInt(digit2.substring(0,1))){
-            numberChange = digit1;
-            digit1 = digit2;
-            digit2 = numberChange;
+		int compare = 0;
+        
+        if(digit1.length() == digit2.length()){
+            while(Integer.parseInt(digit1.substring(compare,compare+1)) <= Integer.parseInt(digit2.substring(compare,compare+1))){
+                numberChange = digit1;
+                digit1 = digit2;
+                digit2 = numberChange;
+                compare++;
+            }
         }
         String[] number1 = digit1.split("");
         String[] number2 = digit2.split("");
@@ -76,6 +81,7 @@ public class BigDigit {
             System.out.print(sum.get(i));
         }
 		System.out.println();
+		//minus every digits
         for(int i = 0 ; i < digit2.length();i++){
             minus.add(Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]))));
             lastLocation = lastLocation(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]));
@@ -104,6 +110,7 @@ public class BigDigit {
             minus.remove(checkFirst0);
             checkFirst0--;
         }
+		//print the minus
         System.out.print("The MINUS result is ");
         for(int i = minus.size()-1 ; i>=0 ;i--){
             System.out.print(minus.get(i));
