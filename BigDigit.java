@@ -23,7 +23,7 @@ public class BigDigit {
 		int compare = 0;
         
         if(digit1.length() == digit2.length()){
-            while(Integer.parseInt(digit1.substring(compare,compare+1)) <= Integer.parseInt(digit2.substring(compare,compare+1))){
+            while(Integer.parseInt(digit1.substring(compare,compare+1)) <= Integer.parseInt(digit2.substring(compare,compare+1))&& compare < digit1.length()-1){
                 numberChange = digit1;
                 digit1 = digit2;
                 digit2 = numberChange;
@@ -106,7 +106,7 @@ public class BigDigit {
             }
         }
         int checkFirst0 = minus.size()-1;
-        while(Integer.parseInt(minus.get(checkFirst0)) == 0){
+        while(Integer.parseInt(minus.get(checkFirst0)) == 0 && checkFirst0 > 0){
             minus.remove(checkFirst0);
             checkFirst0--;
         }
