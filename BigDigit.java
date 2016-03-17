@@ -60,7 +60,10 @@ public class BigDigit {
 		if(nextLocation == 1){
             sum.add("1");
         }
+		
 		//print the sum 
+		
+		System.out.print("The result is ");
         for(int i = sum.size()-1 ; i>=0 ;i--){
             System.out.print(sum.get(i));
         }
