@@ -44,7 +44,9 @@ public class BigDigit {
         }
         
         int length = digit1.length() + digit2.length();
+        int length2 = digit1.length() - digit2.length();
         int[] addLocation = new int[length];
+        int[] quoLocation = new int[length2];
         String[] number1 = digit1.split("");
         String[] number2 = digit2.split("");
         ArrayList<String> sum = new ArrayList<>() ;
@@ -94,10 +96,38 @@ public class BigDigit {
             System.out.print(sum.get(i));
         }
         System.out.println();
+		// cross every number and add
+        for(int i = 0 ; i < digit2.length(); i++){
+            for(int k = 0 ; k < digit1.length();k++){
+                    addLocation[k + i +1] =  addLocation[k + i +1] +  afterLocation(Integer.parseInt(number1[k]), Integer.parseInt(number2[i]),addLocation[k + i]);
+                    addLocation[k + i] = multiDigit(Integer.parseInt(number1[k]), Integer.parseInt(number2[i]),addLocation[k + i]);                         
+            }
+        }
+        for(int i = 0 ; i < digit1.length() + digit2.length() ;i++){
+            multi.add(Integer.toString(addLocation[ i ]));
+        }
+        int checkFirst0 = multi.size()-1;
+        while(Integer.parseInt(multi.get(checkFirst0)) == 0 && checkFirst0 > 0){
+            multi.remove(checkFirst0);
+            checkFirst0--;
+        }
+		//print the multi 
+        System.out.print("The MULTI result is ");
+        for(int i = multi.size()-1 ; i>=0 ;i--){
+            System.out.print(multi.get(i));
+        }
+		System.out.println();
 		//minus every digits
-        for(int i = 0 ; i < digit2.length();i++){
-            minus.add(Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]))));
+        
+        int quo = 0;
+        
+        for(int i = 0 ; i < number2.length;i++){
             lastLocation = lastLocation(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]));
+            if(Integer.parseInt(number1[number1.length-1]) == 0){
+                lastLocation = 0;
+            }
+            number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i])));
+            
             if(lastLocation == 1 ){
                 if(Integer.parseInt(number1[i+1]) !=0){
                     number1[i+1] = Integer.toString(Integer.parseInt(number1[i+1]) -lastLocation);
@@ -112,45 +142,88 @@ public class BigDigit {
             }
             j = 0;
         }
-        if(digit2.length() != digit1.length()){
-            for(int i = digit2.length(); i < digit1.length() ; i++){
-                minus.add(Integer.toString(minusDigit(Integer.parseInt(number1[i]))));
+        if(number2.length != number1.length){
+            for(int i = number2.length; i < number1.length ; i++){
+                lastLocation = lastLocation(Integer.parseInt(number1[i]),lastLocation);
+                number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i])));
+                
+            }
+        }
+        for(int i = 0 ; i < number1.length ; i++){
+            minus.add(number1[i]);
+        }
+        int check0 = minus.size()-1;
+        while(Integer.parseInt(minus.get(check0)) == 0 && check0 > 0){
+            minus.remove(check0);
+            check0--;
+        }
+        System.out.print("The MINUS result is ");
+        
+        for(int i = minus.size()-1 ; i>=0 ;i--){
+            System.out.print(minus.get(i));
+        }
+        System.out.println();
+        if(minus.size() == digit2.length()){
+            compare = 1;
+            while(Integer.parseInt(minus.get(minus.size()-compare)) == Integer.parseInt(number2[number2.length -compare]) && compare <= minus.size()){
+                compare++;
+            }
+        }
+        quo++;
+
+        while(minus.size() > digit2.length() || (minus.size() == digit2.length() && Integer.parseInt(minus.get(minus.size()-compare)) >= Integer.parseInt(number2[number2.length -compare]))){
+        for(int i = 0 ; i < number2.length;i++){
+            
+            lastLocation = lastLocation(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]));
+            if(Integer.parseInt(number1[number1.length-1]) <= 0){
+                lastLocation = 0;
+            }
+            number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i])));
+            if(lastLocation == 1 ){
+                if(Integer.parseInt(number1[i+1]) !=0){
+                    number1[i+1] = Integer.toString(Integer.parseInt(number1[i+1]) -lastLocation);
+                }else{
+                    while(Integer.parseInt(number1[i+j+1]) == 0){
+                        number1[i+j+1] = "9";
+                        j++;
+                    }
+                    number1[i+j+1] = Integer.toString(Integer.parseInt(number1[i+j+1]) -lastLocation);
+                }
+                
+            }
+            j = 0;
+        }
+        if(number2.length != minus.size()){
+            for(int i = number2.length; i < minus.size() ; i++){
+                number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i])));
                 lastLocation = lastLocation(Integer.parseInt(number1[i]),lastLocation);
             }
         }
-        int checkFirst0 = minus.size()-1;
+        for(int i = 0 ; i < minus.size() ; i++){
+            minus.set(i,number1[i]);
+        }
+        checkFirst0 = minus.size()-1;
         while(Integer.parseInt(minus.get(checkFirst0)) == 0 && checkFirst0 > 0){
             minus.remove(checkFirst0);
             checkFirst0--;
         }
-		//print the minus
-        System.out.print("The MINUS result is ");
-       
-        for(int i = minus.size()-1 ; i>=0 ;i--){
-            System.out.print(minus.get(i));
-        }
         
-        System.out.println();
-		// cross every number and add
-        for(int i = 0 ; i < digit2.length(); i++){
-            for(int k = 0 ; k < digit1.length();k++){
-                    addLocation[k + i +1] =  addLocation[k + i +1] +  afterLocation(Integer.parseInt(number1[k]), Integer.parseInt(number2[i]),addLocation[k + i]);
-                    addLocation[k + i] = multiDigit(Integer.parseInt(number1[k]), Integer.parseInt(number2[i]),addLocation[k + i]);                         
+       
+        
+        
+        if(minus.size() == digit2.length()){
+            compare = 1;
+            while(Integer.parseInt(minus.get(minus.size()-compare)) == Integer.parseInt(number2[number2.length -compare]) && compare < minus.size()){
+                compare++;
             }
         }
-        for(int i = 0 ; i < digit1.length() + digit2.length() ;i++){
-            multi.add(Integer.toString(addLocation[ i ]));
+        
+        quo++;
         }
-        checkFirst0 = multi.size()-1;
-        while(Integer.parseInt(multi.get(checkFirst0)) == 0 && checkFirst0 > 0){
-            multi.remove(checkFirst0);
-            checkFirst0--;
-        }
-		//print the multi 
-        System.out.print("The MULTI result is ");
-        for(int i = multi.size()-1 ; i>=0 ;i--){
-            System.out.print(multi.get(i));
-        }
+        System.out.print("The Quotient result is ");
+        System.out.print(quo);
+        System.out.println();
+		
     }
 	//check number1 + number2 + nextLocation is >=10 or not
     public static int nextLocation(int number1,int number2,int nextLocation){
