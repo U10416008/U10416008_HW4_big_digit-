@@ -49,9 +49,13 @@ public class BigDigit {
         int[] quoLocation = new int[length2];
         String[] number1 = digit1.split("");
         String[] number2 = digit2.split("");
+		String[] dividend = digit1.split("");
+        String[] divisor = digit2.split("");
         ArrayList<String> sum = new ArrayList<>() ;
         ArrayList<String> minus = new ArrayList<>() ;
         ArrayList<String> multi = new ArrayList<>() ;
+		ArrayList<String> divid = new ArrayList<>() ;
+        ArrayList<String> quotient = new ArrayList<>() ;
         //change digits of number1
         for(int i = 0 ; i < digit1.length()/2;i++){
             digitChange = number1[i];
@@ -59,10 +63,10 @@ public class BigDigit {
             number1[digit1.length()-1-i] = digitChange;
         }
 		//print number1 after changing
-        for(int i = 0 ; i < digit1.length();i++){
+        /*for(int i = 0 ; i < digit1.length();i++){
             System.out.print(number1[i]);
         }
-        System.out.println();
+        System.out.println();*/
 		//change digits of number2
 		
         for(int i = 0 ; i < digit2.length()/2;i++){
@@ -71,10 +75,10 @@ public class BigDigit {
             number2[digit2.length()-1-i] = digitChange;
         }
 		//print number2 after changing
-        for(int i = 0 ; i < digit2.length();i++){
+        /*for(int i = 0 ; i < digit2.length();i++){
             System.out.print(number2[i]);
         }
-        System.out.println();
+        System.out.println();*/
 		//add every digits
         for(int i = 0 ; i < digit2.length();i++){
             sum.add(Integer.toString(addDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]),nextLocation)));
@@ -163,72 +167,110 @@ public class BigDigit {
             System.out.print(minus.get(i));
         }
         System.out.println();
-        if(minus.size() == digit2.length()){
-            compare = 1;
-            while(Integer.parseInt(minus.get(minus.size()-compare)) == Integer.parseInt(number2[number2.length -compare]) && compare <= minus.size()){
+        for(int i = 0 ; i < digit2.length() ; i++){
+            divid.add(dividend[i]);
+        }
+        int beforeLocation = 0;        
+        quo = 0 ;
+        compare = 0;
+        lastLocation = 0;
+        j = 0;       
+		checkFirst0 = 0;
+        int set = 0;
+        boolean compareOrNot = false ;
+        if(divid.size() == digit2.length()){
+            compare = 0;
+            while(Integer.parseInt(divid.get(compare)) == Integer.parseInt(divisor[compare]) && compare < divid.size()-1){
                 compare++;
             }
         }
-        quo++;
-
-		while((minus.size() > digit2.length() || (minus.size() == digit2.length() && Integer.parseInt(minus.get(minus.size()-compare)) >= Integer.parseInt(number2[number2.length -compare]))) ){
-            for(int i = 0 ; i < number2.length;i++){
+        while( beforeLocation < dividend.length - digit2.length() + 1  ){
             
-                lastLocation = lastLocation(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]));
-                if(Integer.parseInt(number1[minus.size()-1]) <= 0){
-                    lastLocation = 0;
-                }
-                number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i])));
-                if(lastLocation == 1 ){
-                    if(Integer.parseInt(number1[i+1]) !=0){
-                        number1[i+1] = Integer.toString(Integer.parseInt(number1[i+1]) -lastLocation);
-                    }else{
-                        while(Integer.parseInt(number1[i+j+1]) == 0){
-                            number1[i+j+1] = "9";
-                            j++;
+            while(divid.size()  > digit2.length() || (divid.size() == digit2.length() && Integer.parseInt(divid.get(compare)) >= Integer.parseInt(divisor[compare]))) {
+            
+                for(int k = 1;k <= divisor.length ; k++ ){
+                
+                    lastLocation = lastLocation(Integer.parseInt(dividend[divisor.length+beforeLocation-k]),Integer.parseInt(divisor[divisor.length-k]));
+                    //System.out.println(dividend[divisor.length+beforeLocation-k]);
+                    dividend[divisor.length+beforeLocation-k] = Integer.toString(minusDigit(Integer.parseInt(dividend[divisor.length+beforeLocation-k]),Integer.parseInt(divisor[divisor.length-k])));
+                    //System.out.println(dividend[divisor.length+beforeLocation-k]);
+                    if(lastLocation == 1 && Integer.parseInt(dividend[beforeLocation]) > 0 ){
+                        if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-1]) !=0){
+                            if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-1]) == 1 ){
+                                divid.set(0 , "0");
+                            }
+                            dividend[divisor.length+beforeLocation-k-1] = Integer.toString(Integer.parseInt(dividend[divisor.length+beforeLocation-k-1]) -lastLocation);
+                        
+                        }else{
+                            while(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) == 0 && divisor.length+beforeLocation-k-j-1 > 0){
+                                dividend[divisor.length+beforeLocation-k-j-1] = "9";
+                                j++;
+                            }
+                            dividend[divisor.length+beforeLocation-k-j-1] = Integer.toString(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) -lastLocation);
+                            if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) == 1 ){
+                                divid.set(0 , "0");
+                            }
                         }
-                        number1[i+j+1] = Integer.toString(Integer.parseInt(number1[i+j+1]) -lastLocation);
+                        j = 0 ;
                     }
                 
+                }  
+                if(Integer.parseInt(divid.get(0)) == 0 && divid.size() > divisor.length ){
+                    divid.remove(checkFirst0);
+                
                 }
-                j = 0;
-            }
-            if(number2.length != minus.size()){
-                for(int i = number2.length; i < minus.size() ; i++){
-                    number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i])));
-                    lastLocation = lastLocation(Integer.parseInt(number1[i]),lastLocation);
+                while( set < divisor.length ){
+                    divid.set(set,dividend[set + beforeLocation]);
+                    set++;
                 }
-            }
-            for(int i = 0 ; i < minus.size() ; i++){
-                minus.set(i,number1[i]);
-            }
-            checkFirst0 = minus.size()-1;
-            while(Integer.parseInt(minus.get(checkFirst0)) == 0 && checkFirst0 > 0){
-                minus.remove(checkFirst0);
-                checkFirst0--;
-            }
-        
-       
-        
-        
-            if(minus.size() == digit2.length()){
-                compare = 1;
-                while(Integer.parseInt(minus.get(minus.size()-compare)) == Integer.parseInt(number2[number2.length -compare]) && compare < minus.size()){
-                    compare++;
-                }
-            }
-        
-        quo++;
-        }
-        System.out.print("The QUOTIENT result is " + quo + ", and REMAINDER is ");
-        for(int i = minus.size()-1 ; i >= 0 ; i--){
-            System.out.print(minus.get(i));
-        }
-        System.out.println();
-        
-        
+                set = 0;
+                checkFirst0 = 0;
+                while(Integer.parseInt(divid.get(checkFirst0)) == 0 && divid.size() > 1 ){
+                    divid.remove(checkFirst0);
+                
+                }           
             
+            
+                if(divid.size() == digit2.length()){
+                    compare = 0;
+                    while(Integer.parseInt(divid.get(compare)) == Integer.parseInt(divisor[compare]) && compare < divid.size()-1){
+                        compare++;
+                        compareOrNot = true ; 
+                    }
+                }
+                quo++;
+            
+            }
+            if(compareOrNot == true){
+                compare = 0 ;
+                compareOrNot = false ;
+            }
         
+        
+        
+            quotient.add(Integer.toString(quo));
+            if(digit2.length()+beforeLocation < dividend.length){
+                divid.add(dividend[digit2.length()+beforeLocation]);              
+            }
+            beforeLocation++;
+            while(Integer.parseInt(divid.get(checkFirst0)) == 0 && divid.size() > 1 ){
+                    divid.remove(checkFirst0);                
+            }           
+            
+            quo = 0 ;
+        
+        }
+		while(Integer.parseInt(quotient.get(checkFirst0)) == 0 && divid.size() > 1 ){
+                    quotient.remove(checkFirst0);                
+            }
+        System.out.print("The QUOTIENT result is ");
+        for(int i = 0 ; i < quotient.size() ; i++){
+            System.out.print(quotient.get(i));
+        }
+        System.out.print(", and REMAINDER is ");
+        for(int i = 0 ; i < divid.size() ; i++){
+            System.out.print(divid.get(i));
+        }
     }
 	//check number1 + number2 + nextLocation is >=10 or not
     public static int nextLocation(int number1,int number2,int nextLocation){
