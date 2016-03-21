@@ -94,6 +94,9 @@ public class BigDigit {
         if(nextLocation == 1){
             sum.add("1");
         }
+		while(Integer.parseInt(sum.get(sum.size()-1)) == 0 && sum.size() > 1 ){
+            sum.remove(sum.size()-1);        
+        }
 		//print the sum
         System.out.print("The ADD result is ");
         for(int i = sum.size()-1 ; i>=0 ;i--){
@@ -123,11 +126,13 @@ public class BigDigit {
 		System.out.println();
 		//minus every digits
         
-        int quo = 0;
-        
+        int firstLocation = 1;
+        while(Integer.parseInt(number1[number1.length-firstLocation]) == 0){
+			firstLocation++ ;
+		}
         for(int i = 0 ; i < number2.length;i++){
             lastLocation = lastLocation(Integer.parseInt(number1[i]),Integer.parseInt(number2[i]));
-            if(Integer.parseInt(number1[number1.length-1]) == 0){
+            if(Integer.parseInt(number1[number1.length - firstLocation]) == 0){
                 lastLocation = 0;
             }
             number1[i] = Integer.toString(minusDigit(Integer.parseInt(number1[i]),Integer.parseInt(number2[i])));
@@ -171,7 +176,7 @@ public class BigDigit {
             divid.add(dividend[i]);
         }
         int beforeLocation = 0;        
-        quo = 0 ;
+        int quo = 0 ;
         compare = 0;
         lastLocation = 0;
         j = 0;       
@@ -216,7 +221,7 @@ public class BigDigit {
                         j = 0 ;
 						before = true ; 
                     }
-					if( divisor.length+beforeLocation-k == beforeLocation && before == true){ 
+					if( divisor.length+beforeLocation-k == beforeLocation && before == true && divisor.length+beforeLocation-k-j-1 >=0 ){ 
 								divid.set(0 , dividend[divisor.length+beforeLocation-k-j-1]);
 								before = false ;
 					}
@@ -272,8 +277,8 @@ public class BigDigit {
             quo = 0 ;
         
         }
-		while(Integer.parseInt(quotient.get(checkFirst0)) == 0 && divid.size() > 1 ){
-                    quotient.remove(checkFirst0);                
+		while(Integer.parseInt(quotient.get(checkFirst0)) == 0 && quotient.size() > 1 ){
+            quotient.remove(checkFirst0);                
         }
         System.out.print("The QUOTIENT result is ");
         for(int i = 0 ; i < quotient.size() ; i++){
