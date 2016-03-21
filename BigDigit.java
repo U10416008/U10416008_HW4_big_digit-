@@ -176,12 +176,12 @@ public class BigDigit {
         lastLocation = 0;
         j = 0;       
 		checkFirst0 = 0;
-        int set = 0;
         boolean compareOrNot = false ;
         if(divid.size() == digit2.length()){
             compare = 0;
             while(Integer.parseInt(divid.get(compare)) == Integer.parseInt(divisor[compare]) && compare < divid.size()-1){
                 compare++;
+				compareOrNot = true ;
             }
         }
         while( beforeLocation < dividend.length - digit2.length() + 1  ){
@@ -194,7 +194,7 @@ public class BigDigit {
                     //System.out.println(dividend[divisor.length+beforeLocation-k]);
                     dividend[divisor.length+beforeLocation-k] = Integer.toString(minusDigit(Integer.parseInt(dividend[divisor.length+beforeLocation-k]),Integer.parseInt(divisor[divisor.length-k])));
                     //System.out.println(dividend[divisor.length+beforeLocation-k]);
-                    if(lastLocation == 1 && Integer.parseInt(dividend[beforeLocation]) > 0 ){
+                    if(lastLocation == 1 && Integer.parseInt(divid.get(0)) > 0  ){
                         if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-1]) !=0){
                             if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-1]) == 1 ){
                                 divid.set(0 , "0");
@@ -206,10 +206,11 @@ public class BigDigit {
                                 dividend[divisor.length+beforeLocation-k-j-1] = "9";
                                 j++;
                             }
-                            dividend[divisor.length+beforeLocation-k-j-1] = Integer.toString(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) -lastLocation);
-                            if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) == 1 ){
+							if(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) == 1 ){
                                 divid.set(0 , "0");
                             }
+                            dividend[divisor.length+beforeLocation-k-j-1] = Integer.toString(Integer.parseInt(dividend[divisor.length+beforeLocation-k-j-1]) -lastLocation);
+                            
                         }
                         j = 0 ;
                     }
@@ -219,11 +220,15 @@ public class BigDigit {
                     divid.remove(checkFirst0);
                 
                 }
-                while( set < divisor.length ){
-                    divid.set(set,dividend[set + beforeLocation]);
-                    set++;
+				if(divid.size() > divisor.length ){
+					for(int set = 1; set < divisor.length + 1; set++ ){
+						divid.set(set,dividend[set + beforeLocation - 1]);
+                    }
+				}else{
+					for(int set = 0; set < divisor.length; set++ ){
+						divid.set(set,dividend[set + beforeLocation]);
+                    }
                 }
-                set = 0;
                 checkFirst0 = 0;
                 while(Integer.parseInt(divid.get(checkFirst0)) == 0 && divid.size() > 1 ){
                     divid.remove(checkFirst0);
@@ -262,7 +267,7 @@ public class BigDigit {
         }
 		while(Integer.parseInt(quotient.get(checkFirst0)) == 0 && divid.size() > 1 ){
                     quotient.remove(checkFirst0);                
-            }
+        }
         System.out.print("The QUOTIENT result is ");
         for(int i = 0 ; i < quotient.size() ; i++){
             System.out.print(quotient.get(i));
